@@ -188,6 +188,48 @@
   text-align: center;
 }
 
+.filterGroup {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f0f4ff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 2px solid #667eea;
+}
+
+.filterGroup label {
+  font-weight: 600;
+  color: #667eea;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.filterSelect {
+  padding: 10px 15px;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: white;
+  transition: all 0.3s;
+  flex: 1;
+  max-width: 250px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #764ba2;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filterSelect:hover {
+  border-color: #764ba2;
+}
+
 .solicitudCard {
   background: #f8f9fa;
   border-radius: 12px;
@@ -295,5 +337,14 @@
   
   .radioGroup {
     flex-direction: column;
+  }
+
+  .filterGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterSelect {
+    max-width: 100%;
   }
 }
