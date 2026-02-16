@@ -163,16 +163,24 @@ app.get('/api/solicitudes/:id', (req, res) => {
 
 // DELETE - Eliminar solicitud por ID (ANTES de los middlewares de error)
 app.delete('/api/solicitudes/:id', (req, res) => {
+  console.log('=== DELETE REQUEST RECIBIDA ===');
+  console.log('ID recibido:', req.params.id);
+  
   try {
     const id = parseInt(req.params.id);
+    console.log('ID parseado:', id);
     
     // Leer archivo
     const data = readSolicitudes();
+    console.log('Total solicitudes antes de eliminar:', data.solicitudes.length);
+    console.log('IDs disponibles:', data.solicitudes.map(s => s.id));
     
     // Buscar índice de la solicitud
     const index = data.solicitudes.findIndex(s => s.id === id);
+    console.log('Índice encontrado:', index);
     
     if (index === -1) {
+      console.log('ERROR: Solicitud no encontrada');
       return res.status(404).json({
         success: false,
         message: 'Solicitud no encontrada'
@@ -180,17 +188,23 @@ app.delete('/api/solicitudes/:id', (req, res) => {
     }
     
     // Eliminar solicitud
+    const solicitudEliminada = data.solicitudes[index];
+    console.log('Solicitud a eliminar:', solicitudEliminada);
+    
     data.solicitudes.splice(index, 1);
+    console.log('Total solicitudes después de eliminar:', data.solicitudes.length);
     
     // Guardar cambios
-    writeSolicitudes(data);
+    const guardado = writeSolicitudes(data);
+    console.log('Guardado exitoso:', guardado);
     
+    console.log('=== DELETE COMPLETADO EXITOSAMENTE ===');
     res.json({
       success: true,
       message: 'Solicitud eliminada exitosamente'
     });
   } catch (error) {
-    console.error('Error eliminando solicitud:', error);
+    console.error('ERROR en DELETE:', error);
     res.status(500).json({
       success: false,
       message: 'Error al eliminar solicitud'
