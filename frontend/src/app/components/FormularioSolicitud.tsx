@@ -24,9 +24,77 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
+  // Función para limpiar RUT (eliminar puntos y guiones)
+  const limpiarRut = (rut: string): string => {
+    return rut.replace(/\./g, '').replace(/-/g, '');
+  };
+
+  // Función para validar RUT chileno
+  const validarRut = (rut: string): boolean => {
+    const rutLimpio = limpiarRut(rut);
+    
+    // Debe tener entre 8 y 9 caracteres (7-8 números + 1 dígito verificador)
+    if (rutLimpio.length < 8 || rutLimpio.length > 9) {
+      return false;
+    }
+
+    // Separar número y dígito verificador
+    const cuerpo = rutLimpio.slice(0, -1);
+    const dv = rutLimpio.slice(-1).toUpperCase();
+
+    // El cuerpo debe ser solo números
+    if (!/^\d+$/.test(cuerpo)) {
+      return false;
+    }
+
+    // Calcular dígito verificador
+    let suma = 0;
+    let multiplicador = 2;
+
+    for (let i = cuerpo.length - 1; i >= 0; i--) {
+      suma += parseInt(cuerpo[i]) * multiplicador;
+      multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    }
+
+    const dvEsperado = 11 - (suma % 11);
+    let dvCalculado: string;
+
+    if (dvEsperado === 11) {
+      dvCalculado = '0';
+    } else if (dvEsperado === 10) {
+      dvCalculado = 'K';
+    } else {
+      dvCalculado = dvEsperado.toString();
+    }
+
+    return dv === dvCalculado;
+  };
+
+  // Función para formatear RUT mientras se escribe
+  const formatearRut = (rut: string): string => {
+    const rutLimpio = limpiarRut(rut);
+    
+    if (rutLimpio.length === 0) return '';
+    
+    // Agregar guión antes del último dígito
+    if (rutLimpio.length > 1) {
+      return rutLimpio.slice(0, -1) + '-' + rutLimpio.slice(-1);
+    }
+    
+    return rutLimpio;
+  };
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!form.dni.trim()) newErrors.dni = 'DNI es requerido';
+    
+    // Validación RUT
+    if (!form.dni.trim()) {
+      newErrors.dni = 'RUT es requerido';
+    } else if (!validarRut(form.dni)) {
+      newErrors.dni = 'RUT inválido. Formato: 12345678-9 o 12345678-K';
+    }
+    
+    // Validaciones básicas
     if (!form.nombreCliente.trim()) newErrors.nombreCliente = 'Nombre del cliente es requerido';
     if (!form.origen.trim()) newErrors.origen = 'Origen es requerido';
     if (!form.destino.trim()) newErrors.destino = 'Destino es requerido';
@@ -36,9 +104,36 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
     if (!form.fechaRegreso) newErrors.fechaRegreso = 'Fecha de regreso es requerida';
     if (!form.horaRegreso) newErrors.horaRegreso = 'Hora de regreso es requerida';
     
+    // Validación de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (form.email && !emailRegex.test(form.email)) {
       newErrors.email = 'Correo electrónico inválido';
+    }
+
+    // Validaciones de fechas
+    if (form.fechaSalida && form.fechaRegreso) {
+      const fechaSalida = new Date(form.fechaSalida + 'T' + (form.horaSalida || '00:00'));
+      const fechaRegreso = new Date(form.fechaRegreso + 'T' + (form.horaRegreso || '00:00'));
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+
+      // La fecha de salida no puede ser en el pasado
+      const fechaSalidaSolo = new Date(form.fechaSalida);
+      if (fechaSalidaSolo < hoy) {
+        newErrors.fechaSalida = 'La fecha de salida no puede ser en el pasado';
+      }
+
+      // La fecha de regreso debe ser posterior a la fecha de salida
+      if (fechaRegreso <= fechaSalida) {
+        newErrors.fechaRegreso = 'La fecha de regreso debe ser posterior a la fecha de salida';
+      }
+
+      // Si es el mismo día, validar horas
+      if (form.fechaSalida === form.fechaRegreso && form.horaSalida && form.horaRegreso) {
+        if (form.horaRegreso <= form.horaSalida) {
+          newErrors.horaRegreso = 'La hora de regreso debe ser posterior a la hora de salida';
+        }
+      }
     }
     
     setErrors(newErrors);
@@ -51,7 +146,13 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
     
     setLoading(true);
     try {
-      await onSubmit(form);
+      // Enviar RUT limpio al backend
+      await onSubmit({
+        ...form,
+        dni: limpiarRut(form.dni)
+      });
+      
+      // Reset form
       setForm({
         dni: '',
         nombreCliente: '',
@@ -73,16 +174,27 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    
+    // Formatear RUT mientras se escribe
+    if (name === 'dni') {
+      const rutFormateado = formatearRut(value);
+      setForm(prev => ({ ...prev, [name]: rutFormateado }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
+    
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
+  // Obtener fecha mínima (hoy)
+  const hoy = new Date().toISOString().split('T')[0];
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
-        <label className="form-label">DNI o Identificación</label>
+        <label className="form-label">RUT</label>
         <input
           type="text"
           name="dni"
@@ -92,6 +204,7 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
           placeholder="Ej: 16414595-0"
           disabled={loading}
           className="form-input"
+          maxLength={10}
         />
         {errors.dni && <p className="form-error">{errors.dni}</p>}
       </div>
@@ -185,6 +298,7 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
             value={form.fechaSalida}
             onChange={handleChange}
             onBlur={validate}
+            min={hoy}
             disabled={loading}
             className="form-input"
           />
@@ -215,6 +329,7 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
             value={form.fechaRegreso}
             onChange={handleChange}
             onBlur={validate}
+            min={form.fechaSalida || hoy}
             disabled={loading}
             className="form-input"
           />

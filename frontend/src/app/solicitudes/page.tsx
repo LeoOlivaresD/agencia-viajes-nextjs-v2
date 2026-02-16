@@ -28,36 +28,34 @@ export default async function SolicitudesPage() {
 
 function SolicitudManagerSkeleton() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 py-10 px-5">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '40px 20px' }}>
+      <div className="container">
         {/* Header Skeleton */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 flex justify-between items-center animate-pulse">
-          <div className="h-9 bg-gray-200 rounded w-1/3"></div>
-          <div className="h-12 w-40 bg-gray-200 rounded-lg"></div>
+        <div className="card skeleton" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+          <div className="skeleton-line" style={{ width: '300px', height: '32px' }}></div>
+          <div className="skeleton-line" style={{ width: '150px', height: '48px', borderRadius: '8px' }}></div>
         </div>
 
         {/* Grid Skeleton */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid-2">
           {/* Formulario Skeleton */}
-          <div className="bg-white rounded-2xl shadow-2xl p-10 animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-            <div className="space-y-5">
-              <div className="h-12 bg-gray-200 rounded-lg"></div>
-              <div className="h-12 bg-gray-200 rounded-lg"></div>
-              <div className="h-12 bg-gray-200 rounded-lg"></div>
-              <div className="h-12 bg-gray-200 rounded-lg"></div>
-              <div className="h-12 bg-gray-200 rounded-lg"></div>
-            </div>
+          <div className="card skeleton">
+            <div className="skeleton-line" style={{ width: '200px', height: '32px', marginBottom: '30px' }}></div>
+            <div className="skeleton-line" style={{ width: '100%', height: '48px', marginBottom: '20px' }}></div>
+            <div className="skeleton-line" style={{ width: '100%', height: '48px', marginBottom: '20px' }}></div>
+            <div className="skeleton-line" style={{ width: '100%', height: '48px', marginBottom: '20px' }}></div>
+            <div className="skeleton-line" style={{ width: '100%', height: '48px', marginBottom: '20px' }}></div>
+            <div className="skeleton-line" style={{ width: '100%', height: '48px' }}></div>
           </div>
 
           {/* Lista Skeleton */}
-          <div className="bg-white rounded-2xl shadow-2xl p-10 animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="card skeleton">
+            <div className="skeleton-line" style={{ width: '200px', height: '32px', marginBottom: '30px' }}></div>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-gray-50 p-5 rounded-xl mb-4">
-                <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+              <div key={i} className="skeleton-card">
+                <div className="skeleton-line" style={{ width: '70%', marginBottom: '10px' }}></div>
+                <div className="skeleton-line" style={{ width: '50%', marginBottom: '10px' }}></div>
+                <div className="skeleton-line" style={{ width: '85%' }}></div>
               </div>
             ))}
           </div>

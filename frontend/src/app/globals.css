@@ -334,9 +334,10 @@ body {
   font-size: 1.1rem;
 }
 
-/* Skeleton loading */
+/* Skeleton loading - MEJORADO */
 .skeleton {
-  animation: pulse 1.5s ease-in-out infinite;
+  background: #f0f0f0;
+  border-radius: 8px;
 }
 
 @keyframes pulse {
@@ -344,7 +345,7 @@ body {
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.6;
   }
 }
 
@@ -354,15 +355,41 @@ body {
   padding: 20px;
   margin-bottom: 15px;
   border: 2px solid #e0e0e0;
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
 .skeleton-line {
-  height: 18px;
+  height: 20px;
   background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.skeleton-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.skeleton-id {
+  width: 80px;
+  height: 24px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-estado {
+  width: 100px;
+  height: 28px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 20px;
 }
 
 @keyframes shimmer {

@@ -109,14 +109,16 @@ export default function SolicitudManager({ initialSolicitudes }: SolicitudManage
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '40px 20px' }}>
       <div className="container">
-        {/* Header */}
-        <div className="card-header">
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333', margin: 0 }}>
-            Gestión de Solicitudes de Viaje
-          </h1>
-          <a href="/" className="btn btn-gray">
-            Volver al Inicio
-          </a>
+        {/* Header Card */}
+        <div className="card" style={{ marginBottom: '30px' }}>
+          <div className="card-header">
+            <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333', margin: 0 }}>
+              Gestión de Solicitudes de Viaje
+            </h1>
+            <a href="/" className="btn btn-gray">
+              Volver al Inicio
+            </a>
+          </div>
         </div>
 
         {/* Alert */}
