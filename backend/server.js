@@ -174,6 +174,42 @@ app.use((err, req, res, next) => {
     message: 'Error interno del servidor'
   });
 });
+// DELETE - Eliminar solicitud por ID
+app.delete('/api/solicitudes/:id', (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    
+    // Leer archivo
+    const data = JSON.parse(fs.readFileSync(solicitudesFile, 'utf8'));
+    
+    // Buscar índice de la solicitud
+    const index = data.solicitudes.findIndex(s => s.id === id);
+    
+    if (index === -1) {
+      return res.status(404).json({
+        success: false,
+        message: 'Solicitud no encontrada'
+      });
+    }
+    
+    // Eliminar solicitud
+    data.solicitudes.splice(index, 1);
+    
+    // Guardar cambios
+    fs.writeFileSync(solicitudesFile, JSON.stringify(data, null, 2));
+    
+    res.json({
+      success: true,
+      message: 'Solicitud eliminada exitosamente'
+    });
+  } catch (error) {
+    console.error('Error eliminando solicitud:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al eliminar solicitud'
+    });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor Backend corriendo en http://localhost:${PORT}`);
