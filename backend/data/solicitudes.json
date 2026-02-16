@@ -16,21 +16,6 @@
       "fechaRegistro": "2026-01-29T03:00:12.020Z"
     },
     {
-      "id": 1121,
-      "dni": "9898989",
-      "nombreCliente": "Ximena",
-      "origen": "Valparaiso, Villa Alemana",
-      "destino": "Dinamarca",
-      "tipoViaje": "turismo",
-      "fechaSalida": "2026-01-30",
-      "horaSalida": "01:24",
-      "fechaRegreso": "2026-02-25",
-      "horaRegreso": "05:24",
-      "estado": "en-proceso",
-      "email": "xime@gmail.com",
-      "fechaRegistro": "2026-02-16T03:24:19.615Z"
-    },
-    {
       "id": 1123,
       "dni": "98978978",
       "nombreCliente": "gaby",
@@ -44,7 +29,52 @@
       "estado": "en-proceso",
       "email": "gba@gmail.com",
       "fechaRegistro": "2026-02-16T03:42:12.308Z"
+    },
+    {
+      "id": 1124,
+      "dni": "188421392",
+      "nombreCliente": "Leo",
+      "origen": "Valparaiso, Villa Alemana",
+      "destino": "Peru",
+      "tipoViaje": "turismo",
+      "fechaSalida": "2026-02-16",
+      "horaSalida": "01:12",
+      "fechaRegreso": "2026-02-25",
+      "horaRegreso": "01:15",
+      "estado": "en-proceso",
+      "email": "leo@gmail.com",
+      "fechaRegistro": "2026-02-16T04:10:42.288Z"
+    },
+    {
+      "id": 1125,
+      "dni": "98978978",
+      "nombreCliente": "Ximena",
+      "origen": "Valparaiso, Villa Alemana",
+      "destino": "Dinamarca",
+      "tipoViaje": "negocios",
+      "fechaSalida": "2026-02-17",
+      "horaSalida": "01:15",
+      "fechaRegreso": "2026-02-17",
+      "horaRegreso": "01:18",
+      "estado": "pendiente",
+      "email": "xime@gmail.com",
+      "fechaRegistro": "2026-02-16T04:14:08.437Z"
+    },
+    {
+      "id": 1126,
+      "dni": "100978978",
+      "nombreCliente": "martin",
+      "origen": "Valparaiso, Villa Alemana",
+      "destino": "Dinamarca",
+      "tipoViaje": "negocios",
+      "fechaSalida": "2026-02-21",
+      "horaSalida": "01:25",
+      "fechaRegreso": "2026-02-24",
+      "horaRegreso": "01:26",
+      "estado": "en-proceso",
+      "email": "xime@gmail.com",
+      "fechaRegistro": "2026-02-16T04:23:11.457Z"
     }
   ],
-  "lastId": 1123
+  "lastId": 1126
 }
