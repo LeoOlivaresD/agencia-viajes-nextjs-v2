@@ -46,7 +46,8 @@ app.get('/', (req, res) => {
     endpoints: {
       solicitudes: 'GET /api/solicitudes/all',
       crearSolicitud: 'POST /api/solicitudes',
-      solicitudById: 'GET /api/solicitudes/:id'
+      solicitudById: 'GET /api/solicitudes/:id',
+      eliminarSolicitud: 'DELETE /api/solicitudes/:id'
     }
   });
 });
@@ -160,27 +161,13 @@ app.get('/api/solicitudes/:id', (req, res) => {
   }
 });
 
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Ruta no encontrada'
-  });
-});
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    message: 'Error interno del servidor'
-  });
-});
-// DELETE - Eliminar solicitud por ID
+// DELETE - Eliminar solicitud por ID (ANTES de los middlewares de error)
 app.delete('/api/solicitudes/:id', (req, res) => {
   try {
     const id = parseInt(req.params.id);
     
     // Leer archivo
-    const data = JSON.parse(fs.readFileSync(solicitudesFile, 'utf8'));
+    const data = readSolicitudes();
     
     // Buscar índice de la solicitud
     const index = data.solicitudes.findIndex(s => s.id === id);
@@ -196,7 +183,7 @@ app.delete('/api/solicitudes/:id', (req, res) => {
     data.solicitudes.splice(index, 1);
     
     // Guardar cambios
-    fs.writeFileSync(solicitudesFile, JSON.stringify(data, null, 2));
+    writeSolicitudes(data);
     
     res.json({
       success: true,
@@ -209,6 +196,23 @@ app.delete('/api/solicitudes/:id', (req, res) => {
       message: 'Error al eliminar solicitud'
     });
   }
+});
+
+// Middleware 404 - DEBE estar DESPUÉS de todas las rutas
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Ruta no encontrada'
+  });
+});
+
+// Middleware de errores - DEBE estar al FINAL
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    message: 'Error interno del servidor'
+  });
 });
 
 app.listen(PORT, () => {
