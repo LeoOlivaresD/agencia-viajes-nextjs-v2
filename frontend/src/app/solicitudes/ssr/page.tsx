@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import styles from './ssr.module.css';
+export const dynamic = 'force-dynamic';
 
 interface Solicitud {
   id: number;

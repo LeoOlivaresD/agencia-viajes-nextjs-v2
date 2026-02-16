@@ -31,20 +31,20 @@
       "fechaRegistro": "2026-02-16T03:24:19.615Z"
     },
     {
-      "id": 1122,
-      "dni": "asasasasa",
-      "nombreCliente": "Ximena",
+      "id": 1123,
+      "dni": "98978978",
+      "nombreCliente": "gaby",
       "origen": "Valparaiso, Villa Alemana",
       "destino": "Dinamarca",
       "tipoViaje": "negocios",
-      "fechaSalida": "2026-01-30",
-      "horaSalida": "00:25",
-      "fechaRegreso": "2026-02-25",
-      "horaRegreso": "00:30",
-      "estado": "pendiente",
-      "email": "xime@gmail.com",
-      "fechaRegistro": "2026-02-16T03:24:42.542Z"
+      "fechaSalida": "2026-02-16",
+      "horaSalida": "01:41",
+      "fechaRegreso": "2026-02-17",
+      "horaRegreso": "05:41",
+      "estado": "en-proceso",
+      "email": "gba@gmail.com",
+      "fechaRegistro": "2026-02-16T03:42:12.308Z"
     }
   ],
-  "lastId": 1122
+  "lastId": 1123
 }

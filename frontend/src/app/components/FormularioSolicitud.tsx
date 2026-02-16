@@ -29,7 +29,7 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
     return rut.replace(/\./g, '').replace(/-/g, '');
   };
 
-  // Función para validar RUT chileno
+  // Función para validar RUT chileno (versión flexible - solo formato)
   const validarRut = (rut: string): boolean => {
     const rutLimpio = limpiarRut(rut);
     
@@ -47,27 +47,12 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
       return false;
     }
 
-    // Calcular dígito verificador
-    let suma = 0;
-    let multiplicador = 2;
-
-    for (let i = cuerpo.length - 1; i >= 0; i--) {
-      suma += parseInt(cuerpo[i]) * multiplicador;
-      multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    // El dígito verificador debe ser número o K
+    if (!/^[\dK]$/.test(dv)) {
+      return false;
     }
 
-    const dvEsperado = 11 - (suma % 11);
-    let dvCalculado: string;
-
-    if (dvEsperado === 11) {
-      dvCalculado = '0';
-    } else if (dvEsperado === 10) {
-      dvCalculado = 'K';
-    } else {
-      dvCalculado = dvEsperado.toString();
-    }
-
-    return dv === dvCalculado;
+    return true;
   };
 
   // Función para formatear RUT mientras se escribe
@@ -110,21 +95,22 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
       newErrors.email = 'Correo electrónico inválido';
     }
 
-    // Validaciones de fechas
+    // Validaciones de fechas - VERSIÓN CORREGIDA
     if (form.fechaSalida && form.fechaRegreso) {
-      const fechaSalida = new Date(form.fechaSalida + 'T' + (form.horaSalida || '00:00'));
-      const fechaRegreso = new Date(form.fechaRegreso + 'T' + (form.horaRegreso || '00:00'));
+      // Obtener fecha de hoy en formato YYYY-MM-DD
       const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0);
+      const year = hoy.getFullYear();
+      const month = String(hoy.getMonth() + 1).padStart(2, '0');
+      const day = String(hoy.getDate()).padStart(2, '0');
+      const hoyString = `${year}-${month}-${day}`;
 
-      // La fecha de salida no puede ser en el pasado
-      const fechaSalidaSolo = new Date(form.fechaSalida);
-      if (fechaSalidaSolo < hoy) {
-        newErrors.fechaSalida = 'La fecha de salida no puede ser en el pasado';
+      // Comparar como strings (más confiable que Date objects)
+      if (form.fechaSalida < hoyString) {
+        newErrors.fechaSalida = 'La fecha de salida no puede ser anterior a hoy';
       }
 
-      // La fecha de regreso debe ser posterior a la fecha de salida
-      if (fechaRegreso <= fechaSalida) {
+      // Validar que fecha de regreso sea posterior o igual a salida
+      if (form.fechaRegreso < form.fechaSalida) {
         newErrors.fechaRegreso = 'La fecha de regreso debe ser posterior a la fecha de salida';
       }
 
