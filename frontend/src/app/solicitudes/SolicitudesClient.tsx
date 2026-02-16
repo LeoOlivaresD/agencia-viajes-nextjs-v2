@@ -1,7 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import styles from './solicitudes.module.css';
+import SolicitudSkeleton from '../../components/SolicitudSkeleton';
+
+// Lazy loading del componente de formulario
+const FormularioSolicitud = dynamic(() => import('./FormularioSolicitud'), {
+  loading: () => <div className={styles.loadingComponent}>Cargando formulario...</div>
+});
 
 interface Solicitud {
   id: number;
@@ -20,32 +27,23 @@ interface Solicitud {
 }
 
 export default function SolicitudesClient() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
   const [filtroEstado, setFiltroEstado] = useState<string>('todas');
-  
-  const [formData, setFormData] = useState({
-    dni: '',
-    nombreCliente: '',
-    origen: '',
-    destino: '',
-    tipoViaje: '',
-    fechaSalida: '',
-    horaSalida: '',
-    fechaRegreso: '',
-    horaRegreso: '',
-    estado: 'pendiente',
-    email: ''
-  });
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   useEffect(() => {
     loadSolicitudes();
   }, []);
 
   const loadSolicitudes = async () => {
+    setLoading(true);
     try {
+      // Simular espera de 3 segundos
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
       const response = await fetch('/api/solicitudes');
       const data = await response.json();
       
@@ -54,81 +52,13 @@ export default function SolicitudesClient() {
       }
     } catch (err) {
       console.error('Error cargando solicitudes:', err);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const validateEmail = (email: string) => {
-    if (!email) return true;
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (!formData.dni || !formData.nombreCliente || !formData.origen || 
-        !formData.destino || !formData.tipoViaje || !formData.fechaSalida || 
-        !formData.horaSalida || !formData.fechaRegreso || !formData.horaRegreso) {
-      setError('Todos los campos son requeridos');
-      return;
-    }
-
-    if (formData.email && !validateEmail(formData.email)) {
-      setError('Formato de email invalido');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/solicitudes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        setSuccess('Solicitud creada exitosamente');
-        setFormData({
-          dni: '',
-          nombreCliente: '',
-          origen: '',
-          destino: '',
-          tipoViaje: '',
-          fechaSalida: '',
-          horaSalida: '',
-          fechaRegreso: '',
-          horaRegreso: '',
-          estado: 'pendiente',
-          email: ''
-        });
-        loadSolicitudes();
-        
-        setTimeout(() => {
-          setSuccess('');
-        }, 3000);
-      } else {
-        setError(data.message || 'Error al crear solicitud');
-      }
-    } catch (err) {
-      setError('Error al crear solicitud');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSolicitudCreated = () => {
+    loadSolicitudes();
   };
 
   const formatFecha = (fecha: string) => {
@@ -139,6 +69,43 @@ export default function SolicitudesClient() {
     });
   };
 
+  const handleCheckboxChange = (id: number) => {
+    setSelectedIds(prev => 
+      prev.includes(id) 
+        ? prev.filter(selectedId => selectedId !== id)
+        : [...prev, id]
+    );
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedIds.length === 0) {
+      setError('Selecciona al menos una solicitud para eliminar');
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+
+    if (!confirm(`¿Estás seguro de eliminar ${selectedIds.length} solicitud(es)?`)) {
+      return;
+    }
+
+    try {
+      for (const id of selectedIds) {
+        await fetch(`/api/solicitudes/${id}`, {
+          method: 'DELETE'
+        });
+      }
+      
+      setSuccess(`${selectedIds.length} solicitud(es) eliminada(s) exitosamente`);
+      setSelectedIds([]);
+      loadSolicitudes();
+      
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError('Error al eliminar solicitudes');
+      setTimeout(() => setError(''), 3000);
+    }
+  };
+
   const solicitudesFiltradas = filtroEstado === 'todas' 
     ? solicitudes 
     : solicitudes.filter(sol => sol.estado === filtroEstado);
@@ -147,200 +114,14 @@ export default function SolicitudesClient() {
     <div className={styles.solicitudesGrid}>
       <div className={styles.solicitudesFormSection}>
         <h2 className={styles.sectionTitle}>Nueva Solicitud</h2>
-        
-        {error && <div className={styles.errorMessage}>{error}</div>}
-        {success && <div className={styles.successMessage}>{success}</div>}
-
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label htmlFor="dni">DNI o Identificacion</label>
-            <input
-              type="text"
-              id="dni"
-              name="dni"
-              value={formData.dni}
-              onChange={handleChange}
-              placeholder="Ej: 16414595-0"
-              disabled={loading}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="nombreCliente">Nombre del Cliente</label>
-            <input
-              type="text"
-              id="nombreCliente"
-              name="nombreCliente"
-              value={formData.nombreCliente}
-              onChange={handleChange}
-              placeholder="Ej: Esteban Castro Paredes"
-              disabled={loading}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="email">Email (opcional)</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="cliente@ejemplo.com"
-              disabled={loading}
-            />
-          </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label htmlFor="origen">Origen</label>
-              <input
-                type="text"
-                id="origen"
-                name="origen"
-                value={formData.origen}
-                onChange={handleChange}
-                placeholder="Santiago, Chile"
-                disabled={loading}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="destino">Destino</label>
-              <input
-                type="text"
-                id="destino"
-                name="destino"
-                value={formData.destino}
-                onChange={handleChange}
-                placeholder="Madrid, España"
-                disabled={loading}
-              />
-            </div>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="tipoViaje">Tipo de Viaje</label>
-            <select
-              id="tipoViaje"
-              name="tipoViaje"
-              value={formData.tipoViaje}
-              onChange={handleChange}
-              disabled={loading}
-            >
-              <option value="">Seleccione un tipo</option>
-              <option value="negocios">Negocios</option>
-              <option value="turismo">Turismo</option>
-              <option value="otros">Otros</option>
-            </select>
-          </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label htmlFor="fechaSalida">Fecha de Salida</label>
-              <input
-                type="date"
-                id="fechaSalida"
-                name="fechaSalida"
-                value={formData.fechaSalida}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="horaSalida">Hora de Salida</label>
-              <input
-                type="time"
-                id="horaSalida"
-                name="horaSalida"
-                value={formData.horaSalida}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-          </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label htmlFor="fechaRegreso">Fecha de Regreso</label>
-              <input
-                type="date"
-                id="fechaRegreso"
-                name="fechaRegreso"
-                value={formData.fechaRegreso}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="horaRegreso">Hora de Regreso</label>
-              <input
-                type="time"
-                id="horaRegreso"
-                name="horaRegreso"
-                value={formData.horaRegreso}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-          </div>
-
-          <div className={styles.estadoGroup}>
-            <label>Estado de la Solicitud</label>
-            <div className={styles.radioGroup}>
-              <div className={styles.radioOption}>
-                <input
-                  type="radio"
-                  id="pendiente"
-                  name="estado"
-                  value="pendiente"
-                  checked={formData.estado === 'pendiente'}
-                  onChange={handleChange}
-                  disabled={loading}
-                />
-                <label htmlFor="pendiente">Pendiente</label>
-              </div>
-              <div className={styles.radioOption}>
-                <input
-                  type="radio"
-                  id="en-proceso"
-                  name="estado"
-                  value="en-proceso"
-                  checked={formData.estado === 'en-proceso'}
-                  onChange={handleChange}
-                  disabled={loading}
-                />
-                <label htmlFor="en-proceso">En Proceso</label>
-              </div>
-              <div className={styles.radioOption}>
-                <input
-                  type="radio"
-                  id="finalizada"
-                  name="estado"
-                  value="finalizada"
-                  checked={formData.estado === 'finalizada'}
-                  onChange={handleChange}
-                  disabled={loading}
-                />
-                <label htmlFor="finalizada">Finalizada</label>
-              </div>
-            </div>
-          </div>
-
-          <button 
-            type="submit" 
-            className={styles.btn}
-            disabled={loading}
-          >
-            {loading ? 'Creando...' : 'Crear Solicitud'}
-          </button>
-        </form>
+        <FormularioSolicitud onSolicitudCreated={handleSolicitudCreated} />
       </div>
 
       <div className={styles.solicitudesListSection}>
         <h2 className={styles.sectionTitle}>Lista de Solicitudes</h2>
+        
+        {error && <div className={styles.errorMessage}>{error}</div>}
+        {success && <div className={styles.successMessage}>{success}</div>}
         
         <div className={styles.filterGroup}>
           <label htmlFor="filtroEstado">Filtrar por estado:</label>
@@ -356,8 +137,23 @@ export default function SolicitudesClient() {
             <option value="finalizada">Finalizada</option>
           </select>
         </div>
+
+        {selectedIds.length > 0 && (
+          <button 
+            onClick={handleDeleteSelected}
+            className={styles.btnDelete}
+          >
+            Eliminar seleccionadas ({selectedIds.length})
+          </button>
+        )}
         
-        {solicitudesFiltradas.length === 0 ? (
+        {loading ? (
+          <>
+            <SolicitudSkeleton />
+            <SolicitudSkeleton />
+            <SolicitudSkeleton />
+          </>
+        ) : solicitudesFiltradas.length === 0 ? (
           <div className={styles.noSolicitudes}>
             {filtroEstado === 'todas' 
               ? 'No hay solicitudes registradas' 
@@ -367,7 +163,15 @@ export default function SolicitudesClient() {
           solicitudesFiltradas.map(solicitud => (
             <div key={solicitud.id} className={styles.solicitudCard}>
               <div className={styles.solicitudHeader}>
-                <span className={styles.solicitudId}>#{solicitud.id}</span>
+                <div className={styles.solicitudHeaderLeft}>
+                  <input 
+                    type="checkbox"
+                    checked={selectedIds.includes(solicitud.id)}
+                    onChange={() => handleCheckboxChange(solicitud.id)}
+                    className={styles.checkbox}
+                  />
+                  <span className={styles.solicitudId}>#{solicitud.id}</span>
+                </div>
                 <span className={`${styles.solicitudEstado} ${styles[`estado${solicitud.estado.replace('-', '')}`]}`}>
                   {solicitud.estado.replace('-', ' ').toUpperCase()}
                 </span>

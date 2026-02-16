@@ -75,6 +75,13 @@
   border-bottom: 2px solid #e0e0e0;
 }
 
+.loadingComponent {
+  padding: 20px;
+  text-align: center;
+  color: #667eea;
+  font-weight: 600;
+}
+
 .formGroup {
   margin-bottom: 20px;
 }
@@ -169,6 +176,25 @@
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
+.btnDelete {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+.btnDelete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+}
+
 .errorMessage {
   background: #fee;
   border: 1px solid #fcc;
@@ -242,6 +268,19 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+}
+
+.solicitudHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #667eea;
 }
 
 .solicitudId {
