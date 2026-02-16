@@ -1,44 +1,63 @@
 import Link from 'next/link';
-import styles from './page.module.css';
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.brandSection}>
-          <h1 className={styles.brandTitle}>Agencia de Viajes Oeste</h1>
-          <p className={styles.brandSubtitle}>Tu próxima aventura comienza aquí</p>
-        </div>
-
-        <div className={styles.actionSection}>
-          <h2>Bienvenido</h2>
-          <p className={styles.description}>
-            Sistema de gestión de solicitudes de viaje con Server-Side Rendering
+    <div className="home-container">
+      <div className="home-card">
+        <h1 className="home-title">Agencia de Viajes Oeste</h1>
+        <p className="home-subtitle">Sistema de Gestión de Solicitudes de Viaje</p>
+        
+        <div style={{ background: '#f0f4ff', borderRadius: '20px', padding: '40px', marginBottom: '40px' }}>
+          <h2 style={{ fontSize: '1.8rem', fontWeight: '600', color: '#667eea', marginBottom: '20px' }}>
+            Bienvenido al Sistema
+          </h2>
+          <p style={{ color: '#555', marginBottom: '30px', lineHeight: '1.6' }}>
+            Gestiona todas tus solicitudes de viaje de manera eficiente. 
+            Crea nuevas solicitudes, filtra por estado y administra tu información en tiempo real.
           </p>
           
-          <div className={styles.buttonGroup}>
-            <Link href="/solicitudes" className={styles.btnPrimary}>
-              Gestionar Solicitudes
-            </Link>
-            <Link href="/solicitudes/ssr" className={styles.btnSecondary}>
-              Ver Solicitudes (SSR)
-            </Link>
+          <div className="home-features">
+            <div className="feature-card">
+              <div className="feature-icon">📝</div>
+              <h3 className="feature-title">Crear Solicitudes</h3>
+              <p className="feature-text">
+                Registra nuevas solicitudes de viaje con todos los detalles necesarios
+              </p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">🔍</div>
+              <h3 className="feature-title">Filtrar y Buscar</h3>
+              <p className="feature-text">
+                Filtra solicitudes por estado: pendiente, en proceso o finalizada
+              </p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">🗑️</div>
+              <h3 className="feature-title">Gestionar</h3>
+              <p className="feature-text">
+                Elimina solicitudes de forma individual o múltiple fácilmente
+              </p>
+            </div>
           </div>
+        </div>
 
-          <div className={styles.features}>
-            <div className={styles.feature}>
-              <span className={styles.icon}>✓</span>
-              <span>Renderizado del Servidor</span>
-            </div>
-            <div className={styles.feature}>
-              <span className={styles.icon}>✓</span>
-              <span>API REST Backend</span>
-            </div>
-            <div className={styles.feature}>
-              <span className={styles.icon}>✓</span>
-              <span>TypeScript + Next.js 15</span>
-            </div>
-          </div>
+        <div className="home-actions">
+          <Link href="/solicitudes" className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '15px 35px' }}>
+            Ir a Solicitudes
+          </Link>
+          
+          <Link href="/solicitudes/ssr" className="btn btn-gray" style={{ fontSize: '1.1rem', padding: '15px 35px' }}>
+            Ver SSR (Server-Side)
+          </Link>
+        </div>
+
+        <div style={{ marginTop: '50px', paddingTop: '30px', borderTop: '1px solid #ddd' }}>
+          <p style={{ fontSize: '0.9rem', color: '#888' }}>
+            <strong>Proyecto Semana 6</strong> - Desarrollo Frontend III<br />
+            Next.js 15 + TypeScript + Express Backend
+          </p>
         </div>
       </div>
     </div>

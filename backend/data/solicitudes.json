@@ -14,21 +14,6 @@
       "email": "esteban@ejemplo.com",
       "id": 1118,
       "fechaRegistro": "2026-01-29T03:00:12.020Z"
-    },
-    {
-      "dni": "9898989",
-      "nombreCliente": "Ximena",
-      "origen": "Valparaiso, Villa Alemana",
-      "destino": "Dinamarca",
-      "tipoViaje": "negocios",
-      "fechaSalida": "2026-01-30",
-      "horaSalida": "12:02",
-      "fechaRegreso": "2026-02-07",
-      "horaRegreso": "01:03",
-      "estado": "en-proceso",
-      "email": "xime@gmail.com",
-      "id": 1119,
-      "fechaRegistro": "2026-02-16T00:08:39.231Z"
     }
   ],
   "lastId": 1120

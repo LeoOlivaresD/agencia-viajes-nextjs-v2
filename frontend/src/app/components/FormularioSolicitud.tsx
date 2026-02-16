@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Solicitud } from '@/lib/api';
 
 interface FormularioSolicitudProps {
@@ -80,9 +80,9 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div>
-        <label className="block mb-2 text-gray-600 font-medium">DNI o Identificación</label>
+    <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label className="form-label">DNI o Identificación</label>
         <input
           type="text"
           name="dni"
@@ -91,13 +91,13 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
           onBlur={validate}
           placeholder="Ej: 16414595-0"
           disabled={loading}
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          className="form-input"
         />
-        {errors.dni && <p className="text-red-600 text-sm mt-1">{errors.dni}</p>}
+        {errors.dni && <p className="form-error">{errors.dni}</p>}
       </div>
 
-      <div>
-        <label className="block mb-2 text-gray-600 font-medium">Nombre del Cliente</label>
+      <div className="form-group">
+        <label className="form-label">Nombre del Cliente</label>
         <input
           type="text"
           name="nombreCliente"
@@ -106,13 +106,13 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
           onBlur={validate}
           placeholder="Ej: Esteban Castro Paredes"
           disabled={loading}
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          className="form-input"
         />
-        {errors.nombreCliente && <p className="text-red-600 text-sm mt-1">{errors.nombreCliente}</p>}
+        {errors.nombreCliente && <p className="form-error">{errors.nombreCliente}</p>}
       </div>
 
-      <div>
-        <label className="block mb-2 text-gray-600 font-medium">Email (opcional)</label>
+      <div className="form-group">
+        <label className="form-label">Email (opcional)</label>
         <input
           type="email"
           name="email"
@@ -121,14 +121,14 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
           onBlur={validate}
           placeholder="cliente@ejemplo.com"
           disabled={loading}
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          className="form-input"
         />
-        {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
+        {errors.email && <p className="form-error">{errors.email}</p>}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-2 text-gray-600 font-medium">Origen</label>
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label">Origen</label>
           <input
             type="text"
             name="origen"
@@ -137,13 +137,13 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
             onBlur={validate}
             placeholder="Santiago, Chile"
             disabled={loading}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+            className="form-input"
           />
-          {errors.origen && <p className="text-red-600 text-sm mt-1">{errors.origen}</p>}
+          {errors.origen && <p className="form-error">{errors.origen}</p>}
         </div>
 
-        <div>
-          <label className="block mb-2 text-gray-600 font-medium">Destino</label>
+        <div className="form-group">
+          <label className="form-label">Destino</label>
           <input
             type="text"
             name="destino"
@@ -152,33 +152,33 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
             onBlur={validate}
             placeholder="Madrid, España"
             disabled={loading}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+            className="form-input"
           />
-          {errors.destino && <p className="text-red-600 text-sm mt-1">{errors.destino}</p>}
+          {errors.destino && <p className="form-error">{errors.destino}</p>}
         </div>
       </div>
 
-      <div>
-        <label className="block mb-2 text-gray-600 font-medium">Tipo de Viaje</label>
+      <div className="form-group">
+        <label className="form-label">Tipo de Viaje</label>
         <select
           name="tipoViaje"
           value={form.tipoViaje}
           onChange={handleChange}
           onBlur={validate}
           disabled={loading}
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          className="form-select"
         >
           <option value="">Seleccione un tipo</option>
           <option value="negocios">Negocios</option>
           <option value="turismo">Turismo</option>
           <option value="otros">Otros</option>
         </select>
-        {errors.tipoViaje && <p className="text-red-600 text-sm mt-1">{errors.tipoViaje}</p>}
+        {errors.tipoViaje && <p className="form-error">{errors.tipoViaje}</p>}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-2 text-gray-600 font-medium">Fecha de Salida</label>
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label">Fecha de Salida</label>
           <input
             type="date"
             name="fechaSalida"
@@ -186,13 +186,13 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
             onChange={handleChange}
             onBlur={validate}
             disabled={loading}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+            className="form-input"
           />
-          {errors.fechaSalida && <p className="text-red-600 text-sm mt-1">{errors.fechaSalida}</p>}
+          {errors.fechaSalida && <p className="form-error">{errors.fechaSalida}</p>}
         </div>
 
-        <div>
-          <label className="block mb-2 text-gray-600 font-medium">Hora de Salida</label>
+        <div className="form-group">
+          <label className="form-label">Hora de Salida</label>
           <input
             type="time"
             name="horaSalida"
@@ -200,15 +200,15 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
             onChange={handleChange}
             onBlur={validate}
             disabled={loading}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+            className="form-input"
           />
-          {errors.horaSalida && <p className="text-red-600 text-sm mt-1">{errors.horaSalida}</p>}
+          {errors.horaSalida && <p className="form-error">{errors.horaSalida}</p>}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-2 text-gray-600 font-medium">Fecha de Regreso</label>
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label">Fecha de Regreso</label>
           <input
             type="date"
             name="fechaRegreso"
@@ -216,13 +216,13 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
             onChange={handleChange}
             onBlur={validate}
             disabled={loading}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+            className="form-input"
           />
-          {errors.fechaRegreso && <p className="text-red-600 text-sm mt-1">{errors.fechaRegreso}</p>}
+          {errors.fechaRegreso && <p className="form-error">{errors.fechaRegreso}</p>}
         </div>
 
-        <div>
-          <label className="block mb-2 text-gray-600 font-medium">Hora de Regreso</label>
+        <div className="form-group">
+          <label className="form-label">Hora de Regreso</label>
           <input
             type="time"
             name="horaRegreso"
@@ -230,16 +230,16 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
             onChange={handleChange}
             onBlur={validate}
             disabled={loading}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+            className="form-input"
           />
-          {errors.horaRegreso && <p className="text-red-600 text-sm mt-1">{errors.horaRegreso}</p>}
+          {errors.horaRegreso && <p className="form-error">{errors.horaRegreso}</p>}
         </div>
       </div>
 
-      <div>
-        <label className="block mb-3 text-gray-600 font-medium">Estado de la Solicitud</label>
-        <div className="flex gap-5">
-          <div className="flex items-center gap-2">
+      <div className="form-group">
+        <label className="form-label">Estado de la Solicitud</label>
+        <div className="radio-group">
+          <div className="radio-option">
             <input
               type="radio"
               id="pendiente"
@@ -248,11 +248,10 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
               checked={form.estado === 'pendiente'}
               onChange={handleChange}
               disabled={loading}
-              className="w-4 h-4 accent-purple-600"
             />
-            <label htmlFor="pendiente" className="cursor-pointer">Pendiente</label>
+            <label htmlFor="pendiente">Pendiente</label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="radio-option">
             <input
               type="radio"
               id="en-proceso"
@@ -261,11 +260,10 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
               checked={form.estado === 'en-proceso'}
               onChange={handleChange}
               disabled={loading}
-              className="w-4 h-4 accent-purple-600"
             />
-            <label htmlFor="en-proceso" className="cursor-pointer">En Proceso</label>
+            <label htmlFor="en-proceso">En Proceso</label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="radio-option">
             <input
               type="radio"
               id="finalizada"
@@ -274,9 +272,8 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
               checked={form.estado === 'finalizada'}
               onChange={handleChange}
               disabled={loading}
-              className="w-4 h-4 accent-purple-600"
             />
-            <label htmlFor="finalizada" className="cursor-pointer">Finalizada</label>
+            <label htmlFor="finalizada">Finalizada</label>
           </div>
         </div>
       </div>
@@ -284,7 +281,7 @@ export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudPro
       <button 
         type="submit" 
         disabled={loading}
-        className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-800 text-white font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+        className="btn btn-primary w-full"
       >
         {loading ? 'Creando...' : 'Crear Solicitud'}
       </button>

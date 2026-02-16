@@ -9,32 +9,28 @@ interface SolicitudManagerProps {
 }
 
 const FormularioSkeleton = () => (
-  <div className="bg-white p-10 rounded-2xl shadow-2xl animate-pulse">
-    <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-    <div className="space-y-5">
-      <div className="h-12 bg-gray-200 rounded-lg"></div>
-      <div className="h-12 bg-gray-200 rounded-lg"></div>
-      <div className="h-12 bg-gray-200 rounded-lg"></div>
-    </div>
+  <div className="skeleton" style={{ padding: '20px' }}>
+    <div className="skeleton-line" style={{ width: '200px', height: '32px', marginBottom: '30px' }}></div>
+    <div className="skeleton-line" style={{ width: '100%', height: '48px', marginBottom: '20px' }}></div>
+    <div className="skeleton-line" style={{ width: '100%', height: '48px', marginBottom: '20px' }}></div>
+    <div className="skeleton-line" style={{ width: '100%', height: '48px', marginBottom: '20px' }}></div>
   </div>
 );
 
 const SolicitudListSkeleton = () => (
-  <div className="bg-white p-10 rounded-2xl shadow-2xl">
-    <div className="h-8 bg-gray-200 rounded w-1/4 mb-6 animate-pulse"></div>
+  <div style={{ padding: '20px' }}>
+    <div className="skeleton-line" style={{ width: '25%', height: '32px', marginBottom: '20px' }}></div>
     {[1, 2, 3].map((i) => (
-      <div key={i} className="bg-gray-50 p-5 rounded-xl mb-4 animate-pulse">
-        <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      <div key={i} className="skeleton-card">
+        <div className="skeleton-line" style={{ width: '70%', marginBottom: '10px' }}></div>
+        <div className="skeleton-line" style={{ width: '50%' }}></div>
       </div>
     ))}
   </div>
 );
 
 const AlertMessageSkeleton = () => (
-  <div className="p-4 rounded-lg bg-gray-100 animate-pulse">
-    <div className="h-5 bg-gray-200 rounded w-1/2"></div>
-  </div>
+  <div className="skeleton-line" style={{ width: '100%', height: '50px', marginBottom: '20px' }}></div>
 );
 
 const FormularioSolicitud = dynamic(() => import('./FormularioSolicitud'), {
@@ -111,15 +107,14 @@ export default function SolicitudManager({ initialSolicitudes }: SolicitudManage
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 py-10 px-5">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '40px 20px' }}>
+      <div className="container">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800">Gestión de Solicitudes de Viaje</h1>
-          <a 
-            href="/"
-            className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 hover:shadow-lg transition-all"
-          >
+        <div className="card-header">
+          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333', margin: 0 }}>
+            Gestión de Solicitudes de Viaje
+          </h1>
+          <a href="/" className="btn btn-gray">
             Volver al Inicio
           </a>
         </div>
@@ -128,17 +123,15 @@ export default function SolicitudManager({ initialSolicitudes }: SolicitudManage
         {alert && <AlertMessage message={alert.message} type={alert.type} />}
 
         {/* Grid de Formulario y Lista */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid-2">
           {/* Formulario */}
-          <div className="bg-white rounded-2xl shadow-2xl p-10">
-            <h2 className="text-2xl font-bold text-purple-600 mb-6 pb-4 border-b-2 border-gray-200">
-              Nueva Solicitud
-            </h2>
+          <div className="card">
+            <h2 className="title">Nueva Solicitud</h2>
             <FormularioSolicitud onSubmit={handleSubmit} />
           </div>
 
           {/* Lista */}
-          <div className="bg-white rounded-2xl shadow-2xl p-10 max-h-[800px] overflow-y-auto">
+          <div className="card scroll-container">
             <SolicitudList
               solicitudes={solicitudes}
               filtroEstado={filtroEstado}

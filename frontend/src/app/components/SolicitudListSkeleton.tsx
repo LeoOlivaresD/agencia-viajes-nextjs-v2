@@ -1,29 +1,24 @@
 export default function SolicitudListSkeleton() {
   return (
-    <div className="space-y-4">
-      <div className="h-8 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+    <div>
+      <div className="skeleton-line" style={{ width: '25%', height: '32px', marginBottom: '20px' }}></div>
       
-      <div className="p-4 bg-gray-100 rounded-lg animate-pulse">
-        <div className="h-10 bg-gray-200 rounded"></div>
+      <div className="filter-group skeleton">
+        <div className="skeleton-line" style={{ width: '100%', height: '40px' }}></div>
       </div>
       
       {[1, 2, 3].map((i) => (
-        <div key={i} className="bg-gray-50 p-5 rounded-xl border-2 border-gray-200 animate-pulse">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-5 h-5 bg-gray-200 rounded"></div>
-              <div className="h-6 w-16 bg-gray-200 rounded"></div>
-            </div>
-            <div className="h-6 w-24 bg-gray-200 rounded-full"></div>
+        <div key={i} className="skeleton-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+            <div className="skeleton-line" style={{ width: '100px' }}></div>
+            <div className="skeleton-line" style={{ width: '120px', borderRadius: '20px' }}></div>
           </div>
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-            <div className="h-4 bg-gray-200 rounded w-4/5"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/5"></div>
-          </div>
+          <div className="skeleton-line" style={{ width: '70%' }}></div>
+          <div className="skeleton-line" style={{ width: '60%' }}></div>
+          <div className="skeleton-line" style={{ width: '85%' }}></div>
+          <div className="skeleton-line" style={{ width: '50%' }}></div>
+          <div className="skeleton-line" style={{ width: '75%' }}></div>
+          <div className="skeleton-line" style={{ width: '65%' }}></div>
         </div>
       ))}
     </div>
