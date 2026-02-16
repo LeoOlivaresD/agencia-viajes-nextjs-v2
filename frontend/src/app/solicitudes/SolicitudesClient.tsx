@@ -24,6 +24,7 @@ export default function SolicitudesClient() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
+  const [filtroEstado, setFiltroEstado] = useState<string>('todas');
   
   const [formData, setFormData] = useState({
     dni: '',
@@ -137,6 +138,10 @@ export default function SolicitudesClient() {
       day: 'numeric'
     });
   };
+
+  const solicitudesFiltradas = filtroEstado === 'todas' 
+    ? solicitudes 
+    : solicitudes.filter(sol => sol.estado === filtroEstado);
 
   return (
     <div className={styles.solicitudesGrid}>
@@ -337,12 +342,29 @@ export default function SolicitudesClient() {
       <div className={styles.solicitudesListSection}>
         <h2 className={styles.sectionTitle}>Lista de Solicitudes</h2>
         
-        {solicitudes.length === 0 ? (
+        <div className={styles.filterGroup}>
+          <label htmlFor="filtroEstado">Filtrar por estado:</label>
+          <select
+            id="filtroEstado"
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="todas">Todas</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="en-proceso">En Proceso</option>
+            <option value="finalizada">Finalizada</option>
+          </select>
+        </div>
+        
+        {solicitudesFiltradas.length === 0 ? (
           <div className={styles.noSolicitudes}>
-            No hay solicitudes registradas
+            {filtroEstado === 'todas' 
+              ? 'No hay solicitudes registradas' 
+              : `No hay solicitudes con estado: ${filtroEstado}`}
           </div>
         ) : (
-          solicitudes.map(solicitud => (
+          solicitudesFiltradas.map(solicitud => (
             <div key={solicitud.id} className={styles.solicitudCard}>
               <div className={styles.solicitudHeader}>
                 <span className={styles.solicitudId}>#{solicitud.id}</span>
