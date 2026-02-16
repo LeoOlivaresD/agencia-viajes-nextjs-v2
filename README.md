@@ -1,4 +1,4 @@
-# 🌎 Agencia de Viajes Oeste - Sistema de Gestión con Next.js
+# Agencia de Viajes Oeste - Sistema de Gestión con Next.js
 
 Sistema de gestión de solicitudes de viaje desarrollado para el curso **Desarrollo Frontend III** de Duoc UC. Implementa Server-Side Rendering (SSR), Lazy Loading, Skeleton Components y arquitectura MVC en el backend.
 
@@ -9,7 +9,7 @@ Sistema de gestión de solicitudes de viaje desarrollado para el curso **Desarro
 
 ---
 
-## 📋 Tabla de Contenidos
+## Tabla de Contenidos
 
 - [Características](#-características)
 - [Tecnologías](#-tecnologías)
@@ -66,7 +66,7 @@ Sistema de gestión de solicitudes de viaje desarrollado para el curso **Desarro
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 agencia-viajes-nextjs/
@@ -216,7 +216,7 @@ npm run dev
 
 ---
 
-## 🏗 Arquitectura
+## Arquitectura
 
 ### **Backend - Patrón MVC**
 
