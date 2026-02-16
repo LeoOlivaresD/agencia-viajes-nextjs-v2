@@ -59,21 +59,6 @@
       "estado": "pendiente",
       "email": "xime@gmail.com",
       "fechaRegistro": "2026-02-16T04:14:08.437Z"
-    },
-    {
-      "id": 1126,
-      "dni": "100978978",
-      "nombreCliente": "martin",
-      "origen": "Valparaiso, Villa Alemana",
-      "destino": "Dinamarca",
-      "tipoViaje": "negocios",
-      "fechaSalida": "2026-02-21",
-      "horaSalida": "01:25",
-      "fechaRegreso": "2026-02-24",
-      "horaRegreso": "01:26",
-      "estado": "en-proceso",
-      "email": "xime@gmail.com",
-      "fechaRegistro": "2026-02-16T04:23:11.457Z"
     }
   ],
   "lastId": 1126
