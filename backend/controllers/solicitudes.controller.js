@@ -18,7 +18,7 @@ exports.createSolicitud = (req, res) => {
     // Validaciones
     const errors = {};
     if (!dni || dni.trim().length === 0) {
-      errors.dni = 'DNI es obligatorio';
+      errors.dni = 'RUT es obligatorio';
     }
     if (!nombreCliente || nombreCliente.trim().length === 0) {
       errors.nombreCliente = 'Nombre del cliente es obligatorio';
@@ -54,7 +54,12 @@ exports.createSolicitud = (req, res) => {
     }
 
     if (Object.keys(errors).length > 0) {
-      return res.status(400).json({ errors });
+      return res.status(400).json({ 
+        success: false,
+        error: 'Datos de solicitud inválidos',
+        details: errors,
+        code: 'VALIDATION_ERROR'
+      });
     }
 
     const solicitud = solicitudesService.createSolicitud({
@@ -74,13 +79,16 @@ exports.createSolicitud = (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Solicitud creada exitosamente',
-      solicitud
+      solicitud,
+      code: 'CREATED'
     });
   } catch (error) {
     console.error('Error creando solicitud:', error);
     res.status(500).json({ 
       success: false,
-      error: 'Error interno del servidor' 
+      error: 'Error interno del servidor al crear solicitud',
+      message: error.message,
+      code: 'INTERNAL_SERVER_ERROR'
     });
   }
 };
@@ -88,15 +96,19 @@ exports.createSolicitud = (req, res) => {
 exports.getSolicitudes = (req, res) => {
   try {
     const solicitudes = solicitudesService.getSolicitudes();
-    res.json({
+    res.status(200).json({
       success: true,
-      solicitudes
+      solicitudes,
+      count: solicitudes.length,
+      code: 'SUCCESS'
     });
   } catch (error) {
     console.error('Error obteniendo solicitudes:', error);
     res.status(500).json({ 
       success: false,
-      error: 'Error interno del servidor' 
+      error: 'Error interno del servidor al obtener solicitudes',
+      message: error.message,
+      code: 'INTERNAL_SERVER_ERROR'
     });
   }
 };
@@ -104,24 +116,38 @@ exports.getSolicitudes = (req, res) => {
 exports.getSolicitudById = (req, res) => {
   try {
     const id = parseInt(req.params.id);
+    
+    if (isNaN(id)) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'ID de solicitud inválido',
+        details: { id: 'El ID debe ser un número válido' },
+        code: 'INVALID_ID'
+      });
+    }
+
     const solicitud = solicitudesService.getSolicitudById(id);
     
     if (!solicitud) {
       return res.status(404).json({ 
         success: false,
-        error: 'Solicitud no encontrada' 
+        error: `Solicitud con ID ${id} no encontrada`,
+        code: 'NOT_FOUND'
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
-      solicitud
+      solicitud,
+      code: 'SUCCESS'
     });
   } catch (error) {
     console.error('Error obteniendo solicitud:', error);
     res.status(500).json({ 
       success: false,
-      error: 'Error interno del servidor' 
+      error: 'Error interno del servidor al obtener solicitud',
+      message: error.message,
+      code: 'INTERNAL_SERVER_ERROR'
     });
   }
 };
@@ -129,24 +155,39 @@ exports.getSolicitudById = (req, res) => {
 exports.deleteSolicitud = (req, res) => {
   try {
     const id = parseInt(req.params.id);
+    
+    if (isNaN(id)) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'ID de solicitud inválido',
+        details: { id: 'El ID debe ser un número válido' },
+        code: 'INVALID_ID'
+      });
+    }
+
     const solicitudEliminada = solicitudesService.deleteSolicitud(id);
     
     if (solicitudEliminada === null) {
       return res.status(404).json({ 
         success: false,
-        error: 'Solicitud no encontrada' 
+        error: `Solicitud con ID ${id} no encontrada`,
+        code: 'NOT_FOUND'
       });
     }
     
-    res.json({
+    res.status(200).json({
       success: true,
-      message: 'Solicitud eliminada exitosamente'
+      message: `Solicitud #${id} eliminada exitosamente`,
+      solicitud: solicitudEliminada,
+      code: 'DELETED'
     });
   } catch (error) {
     console.error('Error eliminando solicitud:', error);
     res.status(500).json({ 
       success: false,
-      error: 'Error interno del servidor' 
+      error: 'Error interno del servidor al eliminar solicitud',
+      message: error.message,
+      code: 'INTERNAL_SERVER_ERROR'
     });
   }
 };
