@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import styles from './solicitudes.module.css';
 import SolicitudSkeleton from '../../components/SolicitudSkeleton';
+import FormularioSkeleton from '../../components/FormularioSkeleton';
 
-// Lazy loading del componente de formulario
+// Lazy loading del componente de formulario SIN loading component
 const FormularioSolicitud = dynamic(() => import('./FormularioSolicitud'), {
-  loading: () => <div className={styles.loadingComponent}>Cargando formulario...</div>
+  ssr: false
 });
 
 interface Solicitud {
@@ -28,6 +29,7 @@ interface Solicitud {
 
 export default function SolicitudesClient() {
   const [loading, setLoading] = useState(true);
+  const [formLoading, setFormLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
@@ -36,7 +38,14 @@ export default function SolicitudesClient() {
 
   useEffect(() => {
     loadSolicitudes();
+    simulateFormLoading();
   }, []);
+
+  const simulateFormLoading = async () => {
+    // Simular espera de 3 segundos para el formulario
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    setFormLoading(false);
+  };
 
   const loadSolicitudes = async () => {
     setLoading(true);
@@ -114,7 +123,11 @@ export default function SolicitudesClient() {
     <div className={styles.solicitudesGrid}>
       <div className={styles.solicitudesFormSection}>
         <h2 className={styles.sectionTitle}>Nueva Solicitud</h2>
-        <FormularioSolicitud onSolicitudCreated={handleSolicitudCreated} />
+        {formLoading ? (
+          <FormularioSkeleton />
+        ) : (
+          <FormularioSolicitud onSolicitudCreated={handleSolicitudCreated} />
+        )}
       </div>
 
       <div className={styles.solicitudesListSection}>
