@@ -1,0 +1,88 @@
+.skeletonCard {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  border: 2px solid #e0e0e0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.skeletonId {
+  width: 80px;
+  height: 24px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeletonEstado {
+  width: 100px;
+  height: 28px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 20px;
+}
+
+.skeletonInfo {
+  display: grid;
+  gap: 8px;
+}
+
+.skeletonLine {
+  height: 18px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeletonLine:nth-child(1) {
+  width: 70%;
+}
+
+.skeletonLine:nth-child(2) {
+  width: 60%;
+}
+
+.skeletonLine:nth-child(3) {
+  width: 85%;
+}
+
+.skeletonLine:nth-child(4) {
+  width: 50%;
+}
+
+.skeletonLine:nth-child(5) {
+  width: 75%;
+}
+
+.skeletonLine:nth-child(6) {
+  width: 65%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
