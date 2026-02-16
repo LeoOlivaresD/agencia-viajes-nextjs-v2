@@ -1,18 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import styles from './solicitudes.module.css';
+import { useState, useEffect } from 'react';
+import { Solicitud } from '@/lib/api';
 
 interface FormularioSolicitudProps {
-  onSolicitudCreated: () => void;
+  onSubmit: (solicitud: Omit<Solicitud, 'id' | 'fechaRegistro'>) => Promise<void>;
 }
 
-export default function FormularioSolicitud({ onSolicitudCreated }: FormularioSolicitudProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  
-  const [formData, setFormData] = useState({
+export default function FormularioSolicitud({ onSubmit }: FormularioSolicitudProps) {
+  const [form, setForm] = useState({
     dni: '',
     nombreCliente: '',
     origen: '',
@@ -25,272 +21,273 @@ export default function FormularioSolicitud({ onSolicitudCreated }: FormularioSo
     estado: 'pendiente',
     email: ''
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const validateEmail = (email: string) => {
-    if (!email) return true;
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!form.dni.trim()) newErrors.dni = 'DNI es requerido';
+    if (!form.nombreCliente.trim()) newErrors.nombreCliente = 'Nombre del cliente es requerido';
+    if (!form.origen.trim()) newErrors.origen = 'Origen es requerido';
+    if (!form.destino.trim()) newErrors.destino = 'Destino es requerido';
+    if (!form.tipoViaje) newErrors.tipoViaje = 'Tipo de viaje es requerido';
+    if (!form.fechaSalida) newErrors.fechaSalida = 'Fecha de salida es requerida';
+    if (!form.horaSalida) newErrors.horaSalida = 'Hora de salida es requerida';
+    if (!form.fechaRegreso) newErrors.fechaRegreso = 'Fecha de regreso es requerida';
+    if (!form.horaRegreso) newErrors.horaRegreso = 'Hora de regreso es requerida';
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (form.email && !emailRegex.test(form.email)) {
+      newErrors.email = 'Correo electrónico inválido';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (!formData.dni || !formData.nombreCliente || !formData.origen || 
-        !formData.destino || !formData.tipoViaje || !formData.fechaSalida || 
-        !formData.horaSalida || !formData.fechaRegreso || !formData.horaRegreso) {
-      setError('Todos los campos son requeridos');
-      return;
-    }
-
-    if (formData.email && !validateEmail(formData.email)) {
-      setError('Formato de email invalido');
-      return;
-    }
-
+    if (!validate()) return;
+    
     setLoading(true);
-
     try {
-      const response = await fetch('/api/solicitudes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      await onSubmit(form);
+      setForm({
+        dni: '',
+        nombreCliente: '',
+        origen: '',
+        destino: '',
+        tipoViaje: '',
+        fechaSalida: '',
+        horaSalida: '',
+        fechaRegreso: '',
+        horaRegreso: '',
+        estado: 'pendiente',
+        email: ''
       });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        setSuccess('Solicitud creada exitosamente');
-        setFormData({
-          dni: '',
-          nombreCliente: '',
-          origen: '',
-          destino: '',
-          tipoViaje: '',
-          fechaSalida: '',
-          horaSalida: '',
-          fechaRegreso: '',
-          horaRegreso: '',
-          estado: 'pendiente',
-          email: ''
-        });
-        onSolicitudCreated();
-        
-        setTimeout(() => {
-          setSuccess('');
-        }, 3000);
-      } else {
-        setError(data.message || 'Error al crear solicitud');
-      }
-    } catch (err) {
-      setError('Error al crear solicitud');
+      setErrors({});
     } finally {
       setLoading(false);
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
   return (
-    <>
-      {error && <div className={styles.errorMessage}>{error}</div>}
-      {success && <div className={styles.successMessage}>{success}</div>}
-
-      <form onSubmit={handleSubmit}>
-        <div className={styles.formGroup}>
-          <label htmlFor="dni">DNI o Identificacion</label>
-          <input
-            type="text"
-            id="dni"
-            name="dni"
-            value={formData.dni}
-            onChange={handleChange}
-            placeholder="Ej: 16414595-0"
-            disabled={loading}
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="nombreCliente">Nombre del Cliente</label>
-          <input
-            type="text"
-            id="nombreCliente"
-            name="nombreCliente"
-            value={formData.nombreCliente}
-            onChange={handleChange}
-            placeholder="Ej: Esteban Castro Paredes"
-            disabled={loading}
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="email">Email (opcional)</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="cliente@ejemplo.com"
-            disabled={loading}
-          />
-        </div>
-
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label htmlFor="origen">Origen</label>
-            <input
-              type="text"
-              id="origen"
-              name="origen"
-              value={formData.origen}
-              onChange={handleChange}
-              placeholder="Santiago, Chile"
-              disabled={loading}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="destino">Destino</label>
-            <input
-              type="text"
-              id="destino"
-              name="destino"
-              value={formData.destino}
-              onChange={handleChange}
-              placeholder="Madrid, España"
-              disabled={loading}
-            />
-          </div>
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="tipoViaje">Tipo de Viaje</label>
-          <select
-            id="tipoViaje"
-            name="tipoViaje"
-            value={formData.tipoViaje}
-            onChange={handleChange}
-            disabled={loading}
-          >
-            <option value="">Seleccione un tipo</option>
-            <option value="negocios">Negocios</option>
-            <option value="turismo">Turismo</option>
-            <option value="otros">Otros</option>
-          </select>
-        </div>
-
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label htmlFor="fechaSalida">Fecha de Salida</label>
-            <input
-              type="date"
-              id="fechaSalida"
-              name="fechaSalida"
-              value={formData.fechaSalida}
-              onChange={handleChange}
-              disabled={loading}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="horaSalida">Hora de Salida</label>
-            <input
-              type="time"
-              id="horaSalida"
-              name="horaSalida"
-              value={formData.horaSalida}
-              onChange={handleChange}
-              disabled={loading}
-            />
-          </div>
-        </div>
-
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label htmlFor="fechaRegreso">Fecha de Regreso</label>
-            <input
-              type="date"
-              id="fechaRegreso"
-              name="fechaRegreso"
-              value={formData.fechaRegreso}
-              onChange={handleChange}
-              disabled={loading}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="horaRegreso">Hora de Regreso</label>
-            <input
-              type="time"
-              id="horaRegreso"
-              name="horaRegreso"
-              value={formData.horaRegreso}
-              onChange={handleChange}
-              disabled={loading}
-            />
-          </div>
-        </div>
-
-        <div className={styles.estadoGroup}>
-          <label>Estado de la Solicitud</label>
-          <div className={styles.radioGroup}>
-            <div className={styles.radioOption}>
-              <input
-                type="radio"
-                id="pendiente"
-                name="estado"
-                value="pendiente"
-                checked={formData.estado === 'pendiente'}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              <label htmlFor="pendiente">Pendiente</label>
-            </div>
-            <div className={styles.radioOption}>
-              <input
-                type="radio"
-                id="en-proceso"
-                name="estado"
-                value="en-proceso"
-                checked={formData.estado === 'en-proceso'}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              <label htmlFor="en-proceso">En Proceso</label>
-            </div>
-            <div className={styles.radioOption}>
-              <input
-                type="radio"
-                id="finalizada"
-                name="estado"
-                value="finalizada"
-                checked={formData.estado === 'finalizada'}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              <label htmlFor="finalizada">Finalizada</label>
-            </div>
-          </div>
-        </div>
-
-        <button 
-          type="submit" 
-          className={styles.btn}
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div>
+        <label className="block mb-2 text-gray-600 font-medium">DNI o Identificación</label>
+        <input
+          type="text"
+          name="dni"
+          value={form.dni}
+          onChange={handleChange}
+          onBlur={validate}
+          placeholder="Ej: 16414595-0"
           disabled={loading}
+          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+        />
+        {errors.dni && <p className="text-red-600 text-sm mt-1">{errors.dni}</p>}
+      </div>
+
+      <div>
+        <label className="block mb-2 text-gray-600 font-medium">Nombre del Cliente</label>
+        <input
+          type="text"
+          name="nombreCliente"
+          value={form.nombreCliente}
+          onChange={handleChange}
+          onBlur={validate}
+          placeholder="Ej: Esteban Castro Paredes"
+          disabled={loading}
+          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+        />
+        {errors.nombreCliente && <p className="text-red-600 text-sm mt-1">{errors.nombreCliente}</p>}
+      </div>
+
+      <div>
+        <label className="block mb-2 text-gray-600 font-medium">Email (opcional)</label>
+        <input
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          onBlur={validate}
+          placeholder="cliente@ejemplo.com"
+          disabled={loading}
+          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+        />
+        {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-2 text-gray-600 font-medium">Origen</label>
+          <input
+            type="text"
+            name="origen"
+            value={form.origen}
+            onChange={handleChange}
+            onBlur={validate}
+            placeholder="Santiago, Chile"
+            disabled={loading}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          />
+          {errors.origen && <p className="text-red-600 text-sm mt-1">{errors.origen}</p>}
+        </div>
+
+        <div>
+          <label className="block mb-2 text-gray-600 font-medium">Destino</label>
+          <input
+            type="text"
+            name="destino"
+            value={form.destino}
+            onChange={handleChange}
+            onBlur={validate}
+            placeholder="Madrid, España"
+            disabled={loading}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          />
+          {errors.destino && <p className="text-red-600 text-sm mt-1">{errors.destino}</p>}
+        </div>
+      </div>
+
+      <div>
+        <label className="block mb-2 text-gray-600 font-medium">Tipo de Viaje</label>
+        <select
+          name="tipoViaje"
+          value={form.tipoViaje}
+          onChange={handleChange}
+          onBlur={validate}
+          disabled={loading}
+          className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
         >
-          {loading ? 'Creando...' : 'Crear Solicitud'}
-        </button>
-      </form>
-    </>
+          <option value="">Seleccione un tipo</option>
+          <option value="negocios">Negocios</option>
+          <option value="turismo">Turismo</option>
+          <option value="otros">Otros</option>
+        </select>
+        {errors.tipoViaje && <p className="text-red-600 text-sm mt-1">{errors.tipoViaje}</p>}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-2 text-gray-600 font-medium">Fecha de Salida</label>
+          <input
+            type="date"
+            name="fechaSalida"
+            value={form.fechaSalida}
+            onChange={handleChange}
+            onBlur={validate}
+            disabled={loading}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          />
+          {errors.fechaSalida && <p className="text-red-600 text-sm mt-1">{errors.fechaSalida}</p>}
+        </div>
+
+        <div>
+          <label className="block mb-2 text-gray-600 font-medium">Hora de Salida</label>
+          <input
+            type="time"
+            name="horaSalida"
+            value={form.horaSalida}
+            onChange={handleChange}
+            onBlur={validate}
+            disabled={loading}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          />
+          {errors.horaSalida && <p className="text-red-600 text-sm mt-1">{errors.horaSalida}</p>}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-2 text-gray-600 font-medium">Fecha de Regreso</label>
+          <input
+            type="date"
+            name="fechaRegreso"
+            value={form.fechaRegreso}
+            onChange={handleChange}
+            onBlur={validate}
+            disabled={loading}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          />
+          {errors.fechaRegreso && <p className="text-red-600 text-sm mt-1">{errors.fechaRegreso}</p>}
+        </div>
+
+        <div>
+          <label className="block mb-2 text-gray-600 font-medium">Hora de Regreso</label>
+          <input
+            type="time"
+            name="horaRegreso"
+            value={form.horaRegreso}
+            onChange={handleChange}
+            onBlur={validate}
+            disabled={loading}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+          />
+          {errors.horaRegreso && <p className="text-red-600 text-sm mt-1">{errors.horaRegreso}</p>}
+        </div>
+      </div>
+
+      <div>
+        <label className="block mb-3 text-gray-600 font-medium">Estado de la Solicitud</label>
+        <div className="flex gap-5">
+          <div className="flex items-center gap-2">
+            <input
+              type="radio"
+              id="pendiente"
+              name="estado"
+              value="pendiente"
+              checked={form.estado === 'pendiente'}
+              onChange={handleChange}
+              disabled={loading}
+              className="w-4 h-4 accent-purple-600"
+            />
+            <label htmlFor="pendiente" className="cursor-pointer">Pendiente</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="radio"
+              id="en-proceso"
+              name="estado"
+              value="en-proceso"
+              checked={form.estado === 'en-proceso'}
+              onChange={handleChange}
+              disabled={loading}
+              className="w-4 h-4 accent-purple-600"
+            />
+            <label htmlFor="en-proceso" className="cursor-pointer">En Proceso</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="radio"
+              id="finalizada"
+              name="estado"
+              value="finalizada"
+              checked={form.estado === 'finalizada'}
+              onChange={handleChange}
+              disabled={loading}
+              className="w-4 h-4 accent-purple-600"
+            />
+            <label htmlFor="finalizada" className="cursor-pointer">Finalizada</label>
+          </div>
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        disabled={loading}
+        className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-800 text-white font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {loading ? 'Creando...' : 'Crear Solicitud'}
+      </button>
+    </form>
   );
 }
