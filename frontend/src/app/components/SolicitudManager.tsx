@@ -59,11 +59,12 @@ export default function SolicitudManager({ initialSolicitudes }: SolicitudManage
   }, [initialSolicitudes]);
 
   useEffect(() => {
-    if (alert) {
-      const timer = setTimeout(() => setAlert(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [alert]);
+  if (alert) {
+    const timer = setTimeout(() => setAlert(null), 3000);
+    return () => clearTimeout(timer);
+  }
+  return undefined; // ✅ AGREGADO: retorno explícito
+}, [alert]);
 
   const handleSubmit = async (solicitudData: Omit<Solicitud, 'id' | 'fechaRegistro'>) => {
     try {
