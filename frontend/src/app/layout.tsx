@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
+require("./globals.css");
+import { LanguageProvider } from "./context/LanguageContext";
+import LanguageSelector from "./components/LanguageSelector";
 
 export const metadata: Metadata = {
   title: "Agencia de Viajes Oeste",
@@ -13,7 +15,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>
+          <div style={{ position: 'relative', minHeight: '100vh' }}>
+            <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10 }}>
+              <LanguageSelector />
+            </div>
+            {children}
+          </div>
+        </LanguageProvider>
+      </body>
     </html>
   );
 }
