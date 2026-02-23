@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Solicitud, createSolicitud, deleteSolicitud } from '@/lib/api';
 import dynamic from 'next/dynamic';
+import { useTranslation } from 'react-i18next';
+import '@/app/i18n';
 
 interface SolicitudManagerProps {
   initialSolicitudes: Solicitud[];
@@ -17,7 +19,7 @@ const FormularioSkeleton = () => (
   </div>
 );
 
-const SolicitudListSkeleton = () => (
+const SolicitudListSkeletonFallback = () => (
   <div style={{ padding: '20px' }}>
     <div className="skeleton-line" style={{ width: '25%', height: '32px', marginBottom: '20px' }}></div>
     {[1, 2, 3].map((i) => (
@@ -29,7 +31,7 @@ const SolicitudListSkeleton = () => (
   </div>
 );
 
-const AlertMessageSkeleton = () => (
+const AlertSkeleton = () => (
   <div className="skeleton-line" style={{ width: '100%', height: '50px', marginBottom: '20px' }}></div>
 );
 
@@ -39,16 +41,17 @@ const FormularioSolicitud = dynamic(() => import('./FormularioSolicitud'), {
 });
 
 const SolicitudList = dynamic(() => import('./SolicitudList'), {
-  loading: () => <SolicitudListSkeleton />,
+  loading: () => <SolicitudListSkeletonFallback />,
   ssr: true,
 });
 
 const AlertMessage = dynamic(() => import('./AlertMessage'), {
-  loading: () => <AlertMessageSkeleton />,
+  loading: () => <AlertSkeleton />,
   ssr: true,
 });
 
 export default function SolicitudManager({ initialSolicitudes }: SolicitudManagerProps) {
+  const { t } = useTranslation('solicitud');
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>(initialSolicitudes);
   const [alert, setAlert] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [filtroEstado, setFiltroEstado] = useState<string>('todas');
@@ -59,26 +62,26 @@ export default function SolicitudManager({ initialSolicitudes }: SolicitudManage
   }, [initialSolicitudes]);
 
   useEffect(() => {
-  if (alert) {
-    const timer = setTimeout(() => setAlert(null), 3000);
-    return () => clearTimeout(timer);
-  }
-  return undefined; // ✅ AGREGADO: retorno explícito
-}, [alert]);
+    if (alert) {
+      const timer = setTimeout(() => setAlert(null), 3000);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [alert]);
 
   const handleSubmit = async (solicitudData: Omit<Solicitud, 'id' | 'fechaRegistro'>) => {
     try {
       const newSolicitud = await createSolicitud(solicitudData);
       setSolicitudes(prev => [newSolicitud, ...prev]);
-      setAlert({ message: 'Solicitud creada exitosamente', type: 'success' });
+      setAlert({ message: t('message.created'), type: 'success' });
     } catch (error) {
       setAlert({ message: (error as Error).message, type: 'error' });
     }
   };
 
   const handleCheckboxChange = (id: number) => {
-    setSelectedIds(prev => 
-      prev.includes(id) 
+    setSelectedIds(prev =>
+      prev.includes(id)
         ? prev.filter(selectedId => selectedId !== id)
         : [...prev, id]
     );
@@ -86,11 +89,11 @@ export default function SolicitudManager({ initialSolicitudes }: SolicitudManage
 
   const handleDeleteSelected = async () => {
     if (selectedIds.length === 0) {
-      setAlert({ message: 'Selecciona al menos una solicitud para eliminar', type: 'error' });
+      setAlert({ message: t('message.selectToDelete'), type: 'error' });
       return;
     }
 
-    if (!confirm(`¿Estás seguro de eliminar ${selectedIds.length} solicitud(es)?`)) {
+    if (!confirm(t('message.confirmDelete', { count: selectedIds.length }))) {
       return;
     }
 
@@ -98,10 +101,9 @@ export default function SolicitudManager({ initialSolicitudes }: SolicitudManage
       for (const id of selectedIds) {
         await deleteSolicitud(id);
       }
-      
       setSolicitudes(prev => prev.filter(s => !selectedIds.includes(s.id)));
       setSelectedIds([]);
-      setAlert({ message: `${selectedIds.length} solicitud(es) eliminada(s) exitosamente`, type: 'success' });
+      setAlert({ message: t('message.deleted', { count: selectedIds.length }), type: 'success' });
     } catch (error) {
       setAlert({ message: (error as Error).message, type: 'error' });
     }
@@ -110,30 +112,25 @@ export default function SolicitudManager({ initialSolicitudes }: SolicitudManage
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '40px 20px' }}>
       <div className="container">
-        {/* Header Card */}
         <div className="card" style={{ marginBottom: '30px' }}>
           <div className="card-header">
             <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333', margin: 0 }}>
-              Gestión de Solicitudes de Viaje
+              {t('title')}
             </h1>
             <a href="/" className="btn btn-gray">
-              Volver al Inicio
+              {t('button.cancel', { ns: 'common' })}
             </a>
           </div>
         </div>
 
-        {/* Alert */}
         {alert && <AlertMessage message={alert.message} type={alert.type} />}
 
-        {/* Grid de Formulario y Lista */}
         <div className="grid-2">
-          {/* Formulario */}
           <div className="card">
-            <h2 className="title">Nueva Solicitud</h2>
+            <h2 className="title">{t('formTitle')}</h2>
             <FormularioSolicitud onSubmit={handleSubmit} />
           </div>
 
-          {/* Lista */}
           <div className="card scroll-container">
             <SolicitudList
               solicitudes={solicitudes}
