@@ -81,7 +81,9 @@ export default function SolicitudList({
                 <span className="solicitud-id">#{solicitud.id}</span>
               </div>
               <span className={`solicitud-estado estado-${solicitud.estado}`}>
-                {solicitud.estado.replace('-', ' ').toUpperCase()}
+                {solicitud.estado === 'pendiente' ? t('status.pending') :
+ solicitud.estado === 'en-proceso' ? t('status.inProcess') :
+ t('status.completed')}
               </span>
             </div>
 
