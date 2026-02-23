@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-require("./globals.css");
+import "./globals.css";
 import { LanguageProvider } from "./context/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 
