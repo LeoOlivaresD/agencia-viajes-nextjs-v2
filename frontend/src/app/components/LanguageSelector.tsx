@@ -2,13 +2,19 @@
 
 import { useLanguage } from '../context/LanguageContext'
 
+type Language = 'es' | 'en'
+
 export default function LanguageSelector() {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage } = useLanguage()
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLanguage(e.target.value as Language)
+  }
 
   return (
     <select
       value={language}
-      onChange={(e) => setLanguage(e.target.value as 'es' | 'en')}
+      onChange={handleChange}
       style={{
         background: 'white',
         border: '2px solid #667eea',
@@ -23,5 +29,5 @@ export default function LanguageSelector() {
       <option value="es">🇨🇱 Español</option>
       <option value="en">🇺🇸 English</option>
     </select>
-  );
+  )
 }
