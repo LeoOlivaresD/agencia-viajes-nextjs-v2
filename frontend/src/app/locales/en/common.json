@@ -1,0 +1,10 @@
+{
+  "button": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back to Home"
+  },
+  "language": "Language"
+}

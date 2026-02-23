@@ -1,0 +1,10 @@
+{
+  "button": {
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "back": "Volver al Inicio"
+  },
+  "language": "Idioma"
+}

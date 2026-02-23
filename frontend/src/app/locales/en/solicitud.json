@@ -1,0 +1,76 @@
+{
+  "title": "Travel Request Management",
+  "formTitle": "New Request",
+  "listTitle": "Requests List",
+  "label": {
+    "dni": "ID / RUT",
+    "name": "Client Name",
+    "email": "Email (optional)",
+    "origin": "Origin",
+    "destination": "Destination",
+    "tripType": "Trip Type",
+    "departureDate": "Departure Date",
+    "departureTime": "Departure Time",
+    "returnDate": "Return Date",
+    "returnTime": "Return Time",
+    "status": "Request Status",
+    "client": "Client:",
+    "dni_label": "ID:",
+    "route": "Route:",
+    "type": "Type:",
+    "departure": "Departure:",
+    "return": "Return:",
+    "registered": "Registered:"
+  },
+  "placeholder": {
+    "dni": "Ex: 16414595-0",
+    "name": "Ex: Esteban Castro Paredes",
+    "email": "client@example.com",
+    "origin": "Santiago, Chile",
+    "destination": "Madrid, Spain",
+    "tripType": "Select a type"
+  },
+  "tripType": {
+    "business": "Business",
+    "tourism": "Tourism",
+    "other": "Other"
+  },
+  "status": {
+    "pending": "Pending",
+    "inProcess": "In Process",
+    "completed": "Completed"
+  },
+  "filter": {
+    "label": "Filter by status:",
+    "all": "All"
+  },
+  "button": {
+    "submit": "Create Request",
+    "submitting": "Creating...",
+    "deleteSelected": "Delete selected ({{count}})"
+  },
+  "message": {
+    "noData": "No requests registered",
+    "noDataFiltered": "No requests with status: {{estado}}",
+    "created": "Request created successfully",
+    "deleted": "{{count}} request(s) deleted successfully",
+    "selectToDelete": "Select at least one request to delete",
+    "confirmDelete": "Are you sure you want to delete {{count}} request(s)?"
+  },
+  "error": {
+    "dniRequired": "ID is required",
+    "dniInvalid": "Invalid ID. Format: 12345678-9 or 12345678-K",
+    "nameRequired": "Client name is required",
+    "originRequired": "Origin is required",
+    "destinationRequired": "Destination is required",
+    "tripTypeRequired": "Trip type is required",
+    "departureDateRequired": "Departure date is required",
+    "departureTimeRequired": "Departure time is required",
+    "returnDateRequired": "Return date is required",
+    "returnTimeRequired": "Return time is required",
+    "emailInvalid": "Invalid email address",
+    "departureDatePast": "Departure date cannot be in the past",
+    "returnDateBeforeDeparture": "Return date must be after departure date",
+    "returnTimeBeforeDeparture": "Return time must be after departure time"
+  }
+}

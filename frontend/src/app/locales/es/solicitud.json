@@ -1,0 +1,76 @@
+{
+  "title": "Gestión de Solicitudes de Viaje",
+  "formTitle": "Nueva Solicitud",
+  "listTitle": "Lista de Solicitudes",
+  "label": {
+    "dni": "RUT",
+    "name": "Nombre del Cliente",
+    "email": "Email (opcional)",
+    "origin": "Origen",
+    "destination": "Destino",
+    "tripType": "Tipo de Viaje",
+    "departureDate": "Fecha de Salida",
+    "departureTime": "Hora de Salida",
+    "returnDate": "Fecha de Regreso",
+    "returnTime": "Hora de Regreso",
+    "status": "Estado de la Solicitud",
+    "client": "Cliente:",
+    "dni_label": "DNI:",
+    "route": "Ruta:",
+    "type": "Tipo:",
+    "departure": "Salida:",
+    "return": "Regreso:",
+    "registered": "Registrado:"
+  },
+  "placeholder": {
+    "dni": "Ej: 16414595-0",
+    "name": "Ej: Esteban Castro Paredes",
+    "email": "cliente@ejemplo.com",
+    "origin": "Santiago, Chile",
+    "destination": "Madrid, España",
+    "tripType": "Seleccione un tipo"
+  },
+  "tripType": {
+    "business": "Negocios",
+    "tourism": "Turismo",
+    "other": "Otros"
+  },
+  "status": {
+    "pending": "Pendiente",
+    "inProcess": "En Proceso",
+    "completed": "Finalizada"
+  },
+  "filter": {
+    "label": "Filtrar por estado:",
+    "all": "Todas"
+  },
+  "button": {
+    "submit": "Crear Solicitud",
+    "submitting": "Creando...",
+    "deleteSelected": "Eliminar seleccionadas ({{count}})"
+  },
+  "message": {
+    "noData": "No hay solicitudes registradas",
+    "noDataFiltered": "No hay solicitudes con estado: {{estado}}",
+    "created": "Solicitud creada exitosamente",
+    "deleted": "{{count}} solicitud(es) eliminada(s) exitosamente",
+    "selectToDelete": "Selecciona al menos una solicitud para eliminar",
+    "confirmDelete": "¿Estás seguro de eliminar {{count}} solicitud(es)?"
+  },
+  "error": {
+    "dniRequired": "RUT es requerido",
+    "dniInvalid": "RUT inválido. Formato: 12345678-9 o 12345678-K",
+    "nameRequired": "Nombre del cliente es requerido",
+    "originRequired": "Origen es requerido",
+    "destinationRequired": "Destino es requerido",
+    "tripTypeRequired": "Tipo de viaje es requerido",
+    "departureDateRequired": "Fecha de salida es requerida",
+    "departureTimeRequired": "Hora de salida es requerida",
+    "returnDateRequired": "Fecha de regreso es requerida",
+    "returnTimeRequired": "Hora de regreso es requerida",
+    "emailInvalid": "Correo electrónico inválido",
+    "departureDatePast": "La fecha de salida no puede ser anterior a hoy",
+    "returnDateBeforeDeparture": "La fecha de regreso debe ser posterior a la fecha de salida",
+    "returnTimeBeforeDeparture": "La hora de regreso debe ser posterior a la hora de salida"
+  }
+}
