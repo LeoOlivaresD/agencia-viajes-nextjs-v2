@@ -71,6 +71,7 @@
     "emailInvalid": "Correo electrónico inválido",
     "departureDatePast": "La fecha de salida no puede ser anterior a hoy",
     "returnDateBeforeDeparture": "La fecha de regreso debe ser posterior a la fecha de salida",
-    "returnTimeBeforeDeparture": "La hora de regreso debe ser posterior a la hora de salida"
+    "returnTimeBeforeDeparture": "La hora de regreso debe ser posterior a la hora de salida",
+    "statusRequired": "Estado es requerido"
   }
 }

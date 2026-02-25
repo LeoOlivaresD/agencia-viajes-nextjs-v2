@@ -71,6 +71,7 @@
     "emailInvalid": "Invalid email address",
     "departureDatePast": "Departure date cannot be in the past",
     "returnDateBeforeDeparture": "Return date must be after departure date",
-    "returnTimeBeforeDeparture": "Return time must be after departure time"
+    "returnTimeBeforeDeparture": "Return time must be after departure time",
+    "statusRequired": "Status is required"
   }
 }
