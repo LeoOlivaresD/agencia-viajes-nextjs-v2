@@ -28,22 +28,14 @@ Sistema de gestión de solicitudes de viaje desarrollado para el curso **Desarro
 
 ##  Características
 
-### **Semana 6 - Optimización y Rendimiento**
+### **Semana 8 - Formularios y Validación Internacionalizada**
 
--  **Server-Side Rendering (SSR)** con React Server Components
--  **Skeleton Loading** con delay simulado de 3 segundos
--  **Lazy Loading** con `next/dynamic` para code splitting
--  **Patrón MVC** en backend (Controllers, Services, Routes)
--  **API Centralizada** en `lib/api.ts`
--  **Componentes Modulares** y reutilizables
--  **Validaciones Completas** (RUT chileno, fechas, email)
--  **Persistencia de Datos** con Express + JSON
--  **Filtrado por Estado** (pendiente, en-proceso, finalizada)
--  **Eliminación Múltiple** con checkboxes
--  **CSS Puro** con animaciones shimmer
--  **Códigos HTTP Semánticos** (200, 201, 400, 404, 500)
--  **Mensajes de Error Descriptivos**
--  **Responsive Design**
+-  **React Hook Form** para gestión de estado de formularios
+-  **Validaciones inline** con mensajes contextualizados via `t()`
+-  **Re-validación automática** al cambiar idioma (ES/EN)
+-  **Radio buttons** para selección de estado de solicitud
+-  **Validaciones cruzadas** de fechas y horas (salida/regreso)
+-  **Formateo automático** de RUT chileno con guión
 
 ---
 
@@ -56,6 +48,7 @@ Sistema de gestión de solicitudes de viaje desarrollado para el curso **Desarro
 - **CSS Puro** - Estilos sin frameworks
 - **Dynamic Import** - Code splitting
 - **React Server Components** - SSR nativo
+- **React Hook Form 7** - Gestión de formularios y validaciones
 
 ### **Backend**
 - **Node.js** - Runtime de JavaScript

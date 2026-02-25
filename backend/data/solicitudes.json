@@ -44,7 +44,22 @@
       "estado": "en-proceso",
       "email": "leo@gmail.com",
       "fechaRegistro": "2026-02-16T04:10:42.288Z"
+    },
+    {
+      "id": 1131,
+      "dni": "909090908",
+      "nombreCliente": "Ximena",
+      "origen": "Valparaiso, Villa Alemana",
+      "destino": "Peru",
+      "tipoViaje": "negocios",
+      "fechaSalida": "2026-02-25",
+      "horaSalida": "20:10",
+      "fechaRegreso": "2026-02-25",
+      "horaRegreso": "23:10",
+      "estado": "finalizada",
+      "email": "x.olivaresfa@gmail.com",
+      "fechaRegistro": "2026-02-25T22:11:12.376Z"
     }
   ],
-  "lastId": 1129
+  "lastId": 1131
 }
