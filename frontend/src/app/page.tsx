@@ -53,7 +53,7 @@ export default function Home() {
 
         <div style={{ marginTop: '50px', paddingTop: '30px', borderTop: '1px solid #ddd' }}>
           <p style={{ fontSize: '0.9rem', color: '#888' }}>
-            <strong>Proyecto Semana 7</strong> - Desarrollo Frontend III<br />
+            <strong>Proyecto Semana 8</strong> - Desarrollo Frontend III<br />
             Next.js 16 + TypeScript + Express Backend
           </p>
         </div>
